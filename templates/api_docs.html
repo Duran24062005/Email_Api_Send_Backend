@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación API de Envío de Emails</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #0070f3;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0070f3;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get {
+            background-color: #61affe;
+            color: white;
+        }
+        .post {
+            background-color: #49cc90;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 4px solid #ffd600;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Documentación API de Envío de Emails</h1>
+        <p>Versión 1.0</p>
+    </header>
+
+    <section id="introduccion">
+        <h2>Introducción</h2>
+        <p>Esta API permite enviar emails de forma programática a través de solicitudes HTTP. Puedes enviar emails individuales o en lotes, personalizar el contenido y realizar un seguimiento de las entregas.</p>
+    </section>
+
+    <section id="autenticacion">
+        <h2>Autenticación</h2>
+        <p>Todas las solicitudes a la API requieren autenticación mediante un token API. El token debe incluirse en el encabezado de autorización de la siguiente manera:</p>
+        <pre><code>Authorization: Bearer TU_API_KEY</code></pre>
+        <div class="note">
+            <p><strong>Nota:</strong> Mantén tu API key segura y no la compartas en repositorios públicos o código del lado del cliente.</p>
+        </div>
+    </section>
+
+    <section id="endpoints">
+        <h2>Endpoints</h2>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> /api/emails</h3>
+            <p>Envía un email individual.</p>
+            
+            <h4>Parámetros de solicitud</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Tipo</th>
+                        <th>Requerido</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>from</td>
+                        <td>string</td>
+                        <td>Sí</td>
+                        <td>Dirección de email del remitente. Puede incluir un nombre: "Nombre &lt;email@ejemplo.com&gt;"</td>
+                    </tr>
+                    <tr>
+                        <td>to</td>
+                        <td>string | string[]</td>
+                        <td>Sí</td>
+                        <td>Dirección(es) de email del destinatario</td>
+                    </tr>
+                    <tr>
+                        <td>subject</td>
+                        <td>string</td>
+                        <td>Sí</td>
+                        <td>Asunto del email</td>
+                    </tr>
+                    <tr>
+                        <td>html</td>
+                        <td>string</td>
+                        <td>No*</td>
+                        <td>Contenido HTML del email</td>
+                    </tr>
+                    <tr>
+                        <td>text</td>
+                        <td>string</td>
+                        <td>No*</td>
+                        <td>Contenido de texto plano del email</td>
+                    </tr>
+                    <tr>
+                        <td>cc</td>
+                        <td>string | string[]</td>
+                        <td>No</td>
+                        <td>Direcciones de email en copia</td>
+                    </tr>
+                    <tr>
+                        <td>bcc</td>
+                        <td>string | string[]</td>
+                        <td>No</td>
+                        <td>Direcciones de email en copia oculta</td>
+                    </tr>
+                    <tr>
+                        <td>attachments</td>
+                        <td>object[]</td>
+                        <td>No</td>
+                        <td>Archivos adjuntos</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>* Se requiere al menos uno de html o text</p>
+            
+            <h4>Ejemplo de solicitud</h4>
+            <pre><code>{
+  "from": "Acme Inc. &lt;noreply@acme.com&gt;",
+  "to": ["usuario@ejemplo.com"],
+  "subject": "Bienvenido a nuestra plataforma",
+  "html": "&lt;h1&gt;¡Bienvenido!&lt;/h1&gt;&lt;p&gt;Gracias por registrarte en nuestra plataforma.&lt;/p&gt;",
+  "text": "¡Bienvenido! Gracias por registrarte en nuestra plataforma."
+}</code></pre>
+
+            <h4>Respuesta exitosa (200 OK)</h4>
+            <pre><code>{
+  "id": "email_123abc456def",
+  "status": "sent",
+  "created_at": "2023-06-05T12:00:00Z"
+}</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> /api/emails/batch</h3>
+            <p>Envía múltiples emails en una sola solicitud.</p>
+            
+            <h4>Parámetros de solicitud</h4>
+            <p>Un array de objetos, cada uno con los mismos parámetros que el endpoint de email individual.</p>
+            
+            <h4>Ejemplo de solicitud</h4>
+            <pre><code>[
+  {
+    "from": "Acme Inc. &lt;noreply@acme.com&gt;",
+    "to": ["usuario1@ejemplo.com"],
+    "subject": "Asunto personalizado para usuario 1",
+    "html": "&lt;h1&gt;Hola Usuario 1&lt;/h1&gt;&lt;p&gt;Este es tu mensaje personalizado.&lt;/p&gt;"
+  },
+  {
+    "from": "Acme Inc. &lt;noreply@acme.com&gt;",
+    "to": ["usuario2@ejemplo.com"],
+    "subject": "Asunto personalizado para usuario 2",
+    "html": "&lt;h1&gt;Hola Usuario 2&lt;/h1&gt;&lt;p&gt;Este es tu mensaje personalizado.&lt;/p&gt;"
+  }
+]</code></pre>
+
+            <h4>Respuesta exitosa (200 OK)</h4>
+            <pre><code>{
+  "results": [
+    {
+      "id": "email_123abc456def",
+      "status": "sent",
+      "created_at": "2023-06-05T12:00:00Z"
+    },
+    {
+      "id": "email_789ghi101jkl",
+      "status": "sent",
+      "created_at": "2023-06-05T12:00:01Z"
+    }
+  ],
+  "total_sent": 2,
+  "total_failed": 0
+}</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> /api/emails/{id}</h3>
+            <p>Obtiene información sobre un email específico.</p>
+            
+            <h4>Parámetros de ruta</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>ID único del email</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Respuesta exitosa (200 OK)</h4>
+            <pre><code>{
+  "id": "email_123abc456def",
+  "from": "Acme Inc. &lt;noreply@acme.com&gt;",
+  "to": ["usuario@ejemplo.com"],
+  "subject": "Bienvenido a nuestra plataforma",
+  "status": "delivered",
+  "created_at": "2023-06-05T12:00:00Z",
+  "delivered_at": "2023-06-05T12:00:05Z",
+  "opens": 2,
+  "clicks": 1
+}</code></pre>
+        </div>
+    </section>
+
+    <section id="errores">
+        <h2>Códigos de error</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>400</td>
+                    <td>Solicitud incorrecta. Verifica los parámetros enviados.</td>
+                </tr>
+                <tr>
+                    <td>401</td>
+                    <td>No autorizado. Verifica tu API key.</td>
+                </tr>
+                <tr>
+                    <td>403</td>
+                    <td>Prohibido. No tienes permisos para realizar esta acción.</td>
+                </tr>
+                <tr>
+                    <td>404</td>
+                    <td>No encontrado. El recurso solicitado no existe.</td>
+                </tr>
+                <tr>
+                    <td>429</td>
+                    <td>Demasiadas solicitudes. Has excedido el límite de tasa.</td>
+                </tr>
+                <tr>
+                    <td>500</td>
+                    <td>Error interno del servidor.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="ejemplos">
+        <h2>Ejemplos de código</h2>
+
+        <h3>JavaScript (Node.js)</h3>
+        <pre><code>const fetch = require('node-fetch');
+
+async function sendEmail() {
+  const response = await fetch('https://api.ejemplo.com/api/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer TU_API_KEY'
+    },
+    body: JSON.stringify({
+      from: 'Acme Inc. &lt;noreply@acme.com&gt;',
+      to: ['usuario@ejemplo.com'],
+      subject: 'Bienvenido a nuestra plataforma',
+      html: '&lt;h1&gt;¡Bienvenido!&lt;/h1&gt;&lt;p&gt;Gracias por registrarte en nuestra plataforma.&lt;/p&gt;'
+    })
+  });
+  
+  const data = await response.json();
+  console.log(data);
+}
+
+sendEmail();</code></pre>
+
+        <h3>Python</h3>
+        <pre><code>import requests
+import json
+
+def send_email():
+    url = "https://api.ejemplo.com/api/emails"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer TU_API_KEY"
+    }
+    payload = {
+        "from": "Acme Inc. &lt;noreply@acme.com&gt;",
+        "to": ["usuario@ejemplo.com"],
+        "subject": "Bienvenido a nuestra plataforma",
+        "html": "&lt;h1&gt;¡Bienvenido!&lt;/h1&gt;&lt;p&gt;Gracias por registrarte en nuestra plataforma.&lt;/p&gt;"
+    }
+    
+    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    return response.json()
+
+print(send_email())</code></pre>
+
+        <h3>PHP</h3>
+        <pre><code>&lt;?php
+$url = 'https://api.ejemplo.com/api/emails';
+$data = [
+    'from' => 'Acme Inc. &lt;noreply@acme.com&gt;',
+    'to' => ['usuario@ejemplo.com'],
+    'subject' => 'Bienvenido a nuestra plataforma',
+    'html' => '&lt;h1&gt;¡Bienvenido!&lt;/h1&gt;&lt;p&gt;Gracias por registrarte en nuestra plataforma.&lt;/p&gt;'
+];
+
+$options = [
+    'http' => [
+        'header' => "Content-type: application/json\r\nAuthorization: Bearer TU_API_KEY\r\n",
+        'method' => 'POST',
+        'content' => json_encode($data)
+    ]
+];
+
+$context = stream_context_create($options);
+$result = file_get_contents($url, false, $context);
+echo $result;
+?&gt;</code></pre>
+    </section>
+
+    <section id="integraciones">
+        <h2>Integraciones</h2>
+        <p>Nuestra API de emails se puede integrar fácilmente con varios servicios y plataformas:</p>
+        
+        <h3>Integración con QStash</h3>
+        <p>Puedes utilizar QStash para enviar emails de forma asíncrona y programada: [^1]</p>
+        <pre><code>import { Client, resend } from "@upstash/qstash";
+const client = new Client({ token: "&lt;QSTASH_TOKEN&gt;" });
+
+await client.publishJSON({
+  api: {
+    name: "email",
+    provider: resend({ token: "&lt;RESEND_TOKEN&gt;" }),
+  },
+  body: {
+    from: "Acme &lt;onboarding@resend.dev&gt;",
+    to: ["delivered@resend.dev"],
+    subject: "Hello World",
+    html: "&lt;p&gt;It works!&lt;/p&gt;",
+  },
+});</code></pre>
+
+        <h3>Integración con Supabase Functions</h3>
+        <p>Puedes enviar emails desde Supabase Edge Functions: [^2]</p>
+        <pre><code>const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+
+const handler = async (_request: Request): Promise<Response> => {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({
+      from: 'onboarding@resend.dev',
+      to: 'delivered@resend.dev',
+      subject: 'hello world',
+      html: '&lt;strong&gt;it works!&lt;/strong&gt;',
+    }),
+  })
+  
+  const data = await res.json()
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
+Deno.serve(handler)</code></pre>
+
+        <h3>Integración con Upstash Workflow</h3>
+        <p>Puedes utilizar Upstash Workflow para enviar emails como parte de un flujo de trabajo automatizado: [^3]</p>
+        <pre><code>const { status, body } = await context.api.resend.call(
+  "Call Resend",
+  {
+    token: "&lt;RESEND_API_KEY&gt;",
+    body: {
+      from: "Acme &lt;onboarding@resend.dev&gt;",
+      to: ["delivered@resend.dev"],
+      subject: "Hello World",
+      html: "&lt;p&gt;It works!&lt;/p&gt;",
+    },
+    headers: {
+      "content-type": "application/json",
+    },
+  }
+);</code></pre>
+    </section>
+
+    <section id="limites">
+        <h2>Límites y cuotas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Límite diario</th>
+                    <th>Tasa máxima</th>
+                    <th>Tamaño máximo de email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Gratuito</td>
+                    <td>100 emails</td>
+                    <td>10 emails/minuto</td>
+                    <td>10 MB</td>
+                </tr>
+                <tr>
+                    <td>Básico</td>
+                    <td>10,000 emails</td>
+                    <td>100 emails/minuto</td>
+                    <td>25 MB</td>
+                </tr>
+                <tr>
+                    <td>Pro</td>
+                    <td>100,000 emails</td>
+                    <td>500 emails/minuto</td>
+                    <td>50 MB</td>
+                </tr>
+                <tr>
+                    <td>Empresarial</td>
+                    <td>Personalizado</td>
+                    <td>Personalizado</td>
+                    <td>100 MB</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 API de Envío de Emails. Todos los derechos reservados.</p>
+        <p>Para soporte técnico: <a href="mailto:soporte@ejemplo.com">soporte@ejemplo.com</a></p>
+    </footer>
+</body>
+</html>
