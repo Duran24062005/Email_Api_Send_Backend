@@ -57,7 +57,6 @@ class UserServices:
                 setattr(user, key, value)
             self.db.commit()
             self.db.refresh(user)
-            #print("Alexi hay un error aqui", user.first_name)
             return user
         except Exception as e:
             return f"Error inesperado: {e}"
