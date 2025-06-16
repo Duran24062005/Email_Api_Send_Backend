@@ -11,7 +11,7 @@ user_router = APIRouter()
 async def all_users():
     users = UserController.get_users()
     if (users):
-        return JSONResponse(content=users, status_code=200)
+        return JSONResponse(content=jsonable_encoder(users), status_code=200)
     else: 
         return JSONResponse(content={"Error message": "No se optuvo respuesta."})
 
@@ -19,10 +19,21 @@ async def all_users():
 async def get_one_user_by_id(id: int):
     find_user = UserController.get_user_by_id(id)
     if (find_user):
-        return JSONResponse(content=find_user, status_code=200)
+        return JSONResponse(content=jsonable_encoder(find_user), status_code=200)
+    else:
+        return JSONResponse(content=jsonable_encoder(find_user ),status_code=400)
 
-@user_router.post('/create', status_code=200)
+@user_router.post('/create', status_code=201)
 def create_user(data: CreateUser):
     new_user = UserController.create_new_user(data)
     if (new_user):
-        return JSONResponse(content=jsonable_encoder(new_user), status_code=200)
+        return JSONResponse(content=jsonable_encoder(new_user), status_code=201)
+    else:
+        return JSONResponse(content=jsonable_encoder(new_user), status_code=500)
+
+@user_router.put('/update', status_code=200)
+def update_user_by_id(id: int, user_data:CreateUser):
+    user = UserController.update_user(id, user_data.model_dump())
+    if user:
+        return JSONResponse(content=jsonable_encoder(user), status_code=200)
+

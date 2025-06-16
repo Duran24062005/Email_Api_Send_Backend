@@ -1,5 +1,6 @@
 from models.user_models import User as UserEntity
 from sqlalchemy.orm import Session
+from schemas.user_schemas import CreateUser
 
 
 class UserServices:
@@ -31,7 +32,7 @@ class UserServices:
         except:
             return "Error al ejecutar la consulta."
 
-    def create_user(self, data_user):
+    def create_user(self, data_user: CreateUser):
         """Create a new user"""
         try:
             user_created = self.db.query(UserEntity).filter(UserEntity.email == data_user.email).first()
@@ -46,3 +47,17 @@ class UserServices:
                 return new_user
         except:
             return False
+
+    def update_user_created(self, user_id: int, user_data: CreateUser):
+        try:
+            user = self.db.query(UserEntity).filter(UserEntity.id == user_id).first()
+            if not user:
+                return False
+            for key, value in user_data.items():
+                setattr(user, key, value)
+            self.db.commit()
+            self.db.refresh(user)
+            #print("Alexi hay un error aqui", user.first_name)
+            return user
+        except Exception as e:
+            return f"Error inesperado: {e}"
