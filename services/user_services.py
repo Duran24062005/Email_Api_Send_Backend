@@ -60,3 +60,16 @@ class UserServices:
             return user
         except Exception as e:
             return f"Error inesperado: {e}"
+
+    def delete_user_(self, id: int):
+        try:
+            user = self.get_user(id)
+            if user:
+                self.db.delete(user)
+                self.db.commit()
+                self.db.close()
+                return True
+            else:
+                return False
+        except Exception as e:
+            return f"Error when trying to delete to user with id: {id}. {e}"

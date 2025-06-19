@@ -36,4 +36,11 @@ def update_user_by_id(id: int, user_data:CreateUser):
     user = UserController.update_user(id, user_data.model_dump())
     if user:
         return JSONResponse(content=jsonable_encoder(user), status_code=200)
+    
+
+@user_router.delete('/{id}')
+def delete_user_route(id: int):
+    user_deleted = UserController.delete_user(id)
+    if user_deleted:
+        return JSONResponse(content=jsonable_encoder(user_deleted), status_code=200)
 

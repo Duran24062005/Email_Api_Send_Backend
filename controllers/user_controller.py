@@ -51,4 +51,16 @@ class UserController:
                 return(f"User with id = {id} not found.")
         except Exception as e:
             return f"Error to update user: {e}"
+        
+
+    def delete_user(user_id: int):
+        try:
+            with SessionLocal() as db:
+                deleted_user = UserServices(db).delete_user_(user_id)
+            if deleted_user:
+                return f"User deleted successfully."
+            else:
+                return f"User with id {user_id} does exist."
+        except Exception as e:
+            return f"Error to delete user: {e}"
 
