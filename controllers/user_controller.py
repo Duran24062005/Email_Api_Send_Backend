@@ -15,8 +15,8 @@ class UserController:
                 else:
                     return("No hay usuarios registrados.")
 
-        except:
-            print("Error inesperado")
+        except Exception as e:
+            print(f"Error inesperado {e}")
 
     def get_user_by_id(id: int):
         try:

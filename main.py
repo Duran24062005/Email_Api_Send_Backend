@@ -30,6 +30,6 @@ app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 app.include_router(home_routes, prefix="/home", tags=["Home"])
 app.include_router(profile_routes, prefix="/profile", tags=["Profile"])
 app.include_router(email_routes, prefix="/emails", tags=["Emails"])
-app.include_router(user_router, prefix="/user",tags=['users'])
+app.include_router(user_router, prefix="/user",tags=['Users'])
 
 Base.metadata.create_all(bind=engine)

@@ -1,5 +1,5 @@
 from models.user_models import User as UserEntity
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from schemas.user_schemas import CreateUser
 
 
@@ -11,14 +11,18 @@ class UserServices:
     def get_all_users(self):
         """Retrieve all users from the database"""
         try:
-            users = (self.db.query(UserEntity).all())
+            users = (
+                self.db.query(UserEntity)
+                .options(joinedload(UserEntity.emails))
+                .all()
+            )
             if users:
                 return users
             else:
                 return False
         
-        except:
-            return "Error al ejecutar la busqueda."
+        except Exception as e:
+            return f"Error al ejecutar la busqueda {e}."
 
     def get_user(self, id: int):
         """Get user filter by ID"""

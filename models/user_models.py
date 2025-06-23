@@ -1,5 +1,6 @@
 from config.database import Base
 from sqlalchemy import Column, Integer, String, Date, DateTime
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 
@@ -14,3 +15,4 @@ class User(Base):
     imageUrl = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now(), nullable=False)
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now(), nullable=False)
+    emails = relationship('Email', back_populates='user')

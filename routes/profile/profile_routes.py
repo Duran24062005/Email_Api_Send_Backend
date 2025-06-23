@@ -5,5 +5,5 @@ profile_routes = APIRouter()
 
 
 @profile_routes.get('/profile')
-async def profile():
+def profile():
     pass

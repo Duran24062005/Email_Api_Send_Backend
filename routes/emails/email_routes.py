@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from controllers.email_controllers import EmailController
+from schemas.email_schema import SendEmailSchema
 
 
 email_routes = APIRouter()
@@ -17,7 +18,7 @@ def get_email_by_id(id):
     return id
 
 @email_routes.post('/send')
-def Send_Email(email):
+def Send_Email(email: SendEmailSchema):
     return email
 
 
